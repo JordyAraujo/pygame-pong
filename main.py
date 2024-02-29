@@ -85,6 +85,11 @@ while True:
     player_2_score_rect = player_2_score.get_rect(center=(WINDOW_WIDTH - 350, 96))
     screen.blit(player_2_score, player_2_score_rect)
 
+    ball.move_ip(BALL_VELOCITY_X * dt, 0)
+
+    if ball.collidelist(pads) >= 0:
+        BALL_VELOCITY_X = -BALL_VELOCITY_X
+
     pygame.draw.rect(screen, WHITE, ball)
 
     for pad in pads:
