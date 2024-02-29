@@ -9,8 +9,12 @@ pygame.init()
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 small_font = pygame.font.Font('assets/fonts/font.ttf', 24)
+score_font = pygame.font.Font('assets/fonts/font.ttf', 96)
 
 pygame.display.set_caption("pygame-pong")
+
+player_1_points = 0
+player_2_points = 0
 
 PADS_WIDTH = 20
 PADS_HEIGHT = 90
@@ -40,7 +44,6 @@ right_pad = pygame.Rect(
 pads = [left_pad, right_pad]
 
 while True:
-
     event = pygame.event.poll()
 
     if (
@@ -56,6 +59,14 @@ while True:
     text = small_font.render("Hello Pong!", True, WHITE)
     text_rect = text.get_rect(center=(WINDOW_WIDTH / 2, 24))
     screen.blit(text, text_rect)
+
+    player_1_score = score_font.render(str(player_1_points), True, WHITE)
+    player_1_score_rect = player_1_score.get_rect(center=(350, 96))
+    screen.blit(player_1_score, player_1_score_rect)
+
+    player_2_score = score_font.render(str(player_2_points), True, WHITE)
+    player_2_score_rect = player_2_score.get_rect(center=(WINDOW_WIDTH - 350, 96))
+    screen.blit(player_2_score, player_2_score_rect)
 
     pygame.draw.rect(screen, WHITE, ball)
 
