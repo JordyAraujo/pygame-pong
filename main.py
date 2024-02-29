@@ -13,6 +13,12 @@ score_font = pygame.font.Font('assets/fonts/font.ttf', 96)
 
 pygame.display.set_caption("pygame-pong")
 
+BALL_VELOCITY_X = 0.5
+
+PAD_VELOCITY = 0.5
+
+clock = pygame.time.Clock()
+
 player_1_points = 0
 player_2_points = 0
 
@@ -44,6 +50,8 @@ right_pad = pygame.Rect(
 pads = [left_pad, right_pad]
 
 while True:
+    dt = clock.tick(30)
+
     event = pygame.event.poll()
 
     if (
@@ -53,6 +61,15 @@ while True:
     ):
         break
 
+    pressed = pygame.key.get_pressed()
+    if pressed[pygame.K_w]:
+        left_pad.move_ip(0, -PAD_VELOCITY * dt)
+    if pressed[pygame.K_s]:
+        left_pad.move_ip(0, PAD_VELOCITY * dt)
+    if pressed[pygame.K_UP]:
+        right_pad.move_ip(0, -PAD_VELOCITY * dt)
+    if pressed[pygame.K_DOWN]:
+        right_pad.move_ip(0, PAD_VELOCITY * dt)
 
     screen.fill(BACKGROUND)
 
