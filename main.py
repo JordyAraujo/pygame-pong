@@ -93,6 +93,9 @@ while True:
 
     if ball.collidelist(pads) >= 0:
         ball_velocity_x = -ball_velocity_x
+        
+    if ball.top <= 0 or ball.bottom >= WINDOW_HEIGHT:
+        ball_velocity_y = -ball_velocity_y
 
     pygame.draw.rect(screen, WHITE, ball)
 
