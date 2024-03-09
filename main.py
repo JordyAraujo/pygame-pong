@@ -119,6 +119,18 @@ while True:
         ball_velocity_x = 0.25
         ball_velocity_y = random.randrange(-5, 6) / 10
 
+    if left_pad.top <= 0:
+        left_pad.top = 0
+
+    if left_pad.bottom >= WINDOW_HEIGHT:
+        left_pad.bottom = WINDOW_HEIGHT
+
+    if right_pad.top <= 0:
+        right_pad.top = 0
+
+    if right_pad.bottom >= WINDOW_HEIGHT:
+        right_pad.bottom = WINDOW_HEIGHT
+
     pygame.draw.rect(screen, WHITE, ball)
 
     for pad in pads:
