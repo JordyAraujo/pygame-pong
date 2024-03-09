@@ -1,4 +1,6 @@
+from time import time
 import pygame
+import random
 
 BACKGROUND = (40, 45, 52)
 WHITE = (255, 255, 255)
@@ -6,14 +8,13 @@ WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 pygame.init()
+random.seed(time())
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 small_font = pygame.font.Font('assets/fonts/font.ttf', 24)
 score_font = pygame.font.Font('assets/fonts/font.ttf', 96)
 
 pygame.display.set_caption("pygame-pong")
-
-BALL_VELOCITY_X = 0.5
 
 PAD_VELOCITY = 0.5
 
@@ -32,6 +33,9 @@ ball = pygame.Rect(
     BALL_SIZE,
     BALL_SIZE,
 )
+
+ball_velocity_x = 0.25
+ball_velocity_y = random.randrange(-5, 6) / 10
 
 left_pad = pygame.Rect(
     10,
@@ -85,10 +89,10 @@ while True:
     player_2_score_rect = player_2_score.get_rect(center=(WINDOW_WIDTH - 350, 96))
     screen.blit(player_2_score, player_2_score_rect)
 
-    ball.move_ip(BALL_VELOCITY_X * dt, 0)
+    ball.move_ip(ball_velocity_x * dt, ball_velocity_y * dt)
 
     if ball.collidelist(pads) >= 0:
-        BALL_VELOCITY_X = -BALL_VELOCITY_X
+        ball_velocity_x = -ball_velocity_x
 
     pygame.draw.rect(screen, WHITE, ball)
 
