@@ -93,9 +93,31 @@ while True:
 
     if ball.collidelist(pads) >= 0:
         ball_velocity_x = -ball_velocity_x
-        
+
     if ball.top <= 0 or ball.bottom >= WINDOW_HEIGHT:
         ball_velocity_y = -ball_velocity_y
+
+    if ball.left <= 0:
+        player_2_points += 1
+        ball = pygame.Rect(
+            (WINDOW_WIDTH / 2) - (BALL_SIZE / 2),
+            (WINDOW_HEIGHT / 2) - (BALL_SIZE / 2),
+            BALL_SIZE,
+            BALL_SIZE,
+        )
+        ball_velocity_x = -0.25
+        ball_velocity_y = random.randrange(-5, 6) / 10
+
+    if ball.right >= WINDOW_WIDTH:
+        player_1_points += 1
+        ball = pygame.Rect(
+            (WINDOW_WIDTH / 2) - (BALL_SIZE / 2),
+            (WINDOW_HEIGHT / 2) - (BALL_SIZE / 2),
+            BALL_SIZE,
+            BALL_SIZE,
+        )
+        ball_velocity_x = 0.25
+        ball_velocity_y = random.randrange(-5, 6) / 10
 
     pygame.draw.rect(screen, WHITE, ball)
 
