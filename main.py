@@ -1,24 +1,42 @@
-from time import time
-import pygame
+from time import time as seed_time
+from pygame import (
+    init,
+    display,
+    font,
+    event,
+    key,
+    QUIT,
+    K_ESCAPE,
+    KEYDOWN,
+    K_w,
+    K_s,
+    K_UP,
+    K_DOWN,
+    draw,
+    Rect,
+    time as time
+)
 import random
+from Ball import Ball
 
 BACKGROUND = (40, 45, 52)
 WHITE = (255, 255, 255)
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
+SCREEN_CENTER = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
 
-pygame.init()
-random.seed(time())
+init()
+random.seed(seed_time())
 
-screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-small_font = pygame.font.Font('assets/fonts/font.ttf', 24)
-score_font = pygame.font.Font('assets/fonts/font.ttf', 96)
+screen = display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+small_font = font.Font('assets/fonts/font.ttf', 24)
+score_font = font.Font('assets/fonts/font.ttf', 96)
 
-pygame.display.set_caption("pygame-pong")
+display.set_caption("pygame-pong")
 
 PAD_VELOCITY = 0.5
 
-clock = pygame.time.Clock()
+clock = time.Clock()
 
 player_1_points = 0
 player_2_points = 0
@@ -27,24 +45,16 @@ PADS_WIDTH = 20
 PADS_HEIGHT = 90
 BALL_SIZE = 20
 
-ball = pygame.Rect(
-    (WINDOW_WIDTH / 2) - (BALL_SIZE / 2),
-    (WINDOW_HEIGHT / 2) - (BALL_SIZE / 2),
-    BALL_SIZE,
-    BALL_SIZE,
-)
+ball = Ball(BALL_SIZE, SCREEN_CENTER)
 
-ball_velocity_x = 0.25
-ball_velocity_y = random.randrange(-5, 6) / 10
-
-left_pad = pygame.Rect(
+left_pad = Rect(
     10,
     (WINDOW_HEIGHT / 2) - (PADS_HEIGHT / 2),
     PADS_WIDTH,
     PADS_HEIGHT
 )
 
-right_pad = pygame.Rect(
+right_pad = Rect(
     WINDOW_WIDTH - PADS_WIDTH - 10,
     (WINDOW_HEIGHT / 2) - (PADS_HEIGHT / 2),
     PADS_WIDTH,
@@ -56,23 +66,23 @@ pads = [left_pad, right_pad]
 while True:
     dt = clock.tick(30)
 
-    event = pygame.event.poll()
+    pygame_event = event.poll()
 
     if (
-        event.type == pygame.QUIT
-        or event.type == pygame.KEYDOWN
-        and event.key == pygame.K_ESCAPE
+        pygame_event.type == QUIT
+        or pygame_event.type == KEYDOWN
+        and pygame_event.key == K_ESCAPE
     ):
         break
 
-    pressed = pygame.key.get_pressed()
-    if pressed[pygame.K_w]:
+    pressed = key.get_pressed()
+    if pressed[K_w]:
         left_pad.move_ip(0, -PAD_VELOCITY * dt)
-    if pressed[pygame.K_s]:
+    if pressed[K_s]:
         left_pad.move_ip(0, PAD_VELOCITY * dt)
-    if pressed[pygame.K_UP]:
+    if pressed[K_UP]:
         right_pad.move_ip(0, -PAD_VELOCITY * dt)
-    if pressed[pygame.K_DOWN]:
+    if pressed[K_DOWN]:
         right_pad.move_ip(0, PAD_VELOCITY * dt)
 
     screen.fill(BACKGROUND)
@@ -86,38 +96,29 @@ while True:
     screen.blit(player_1_score, player_1_score_rect)
 
     player_2_score = score_font.render(str(player_2_points), True, WHITE)
-    player_2_score_rect = player_2_score.get_rect(center=(WINDOW_WIDTH - 350, 96))
+    player_2_score_rect = player_2_score.get_rect(
+        center=(WINDOW_WIDTH - 350, 96)
+    )
     screen.blit(player_2_score, player_2_score_rect)
 
-    ball.move_ip(ball_velocity_x * dt, ball_velocity_y * dt)
+    ball.move(dt)
 
-    if ball.collidelist(pads) >= 0:
-        ball_velocity_x = -ball_velocity_x
+    if ball.colliderect(left_pad):
+        ball.bounce_right(left_pad)
+
+    if ball.colliderect(right_pad):
+        ball.bounce_left(right_pad)
 
     if ball.top <= 0 or ball.bottom >= WINDOW_HEIGHT:
-        ball_velocity_y = -ball_velocity_y
+        ball.bounce_wall()
 
     if ball.left <= 0:
         player_2_points += 1
-        ball = pygame.Rect(
-            (WINDOW_WIDTH / 2) - (BALL_SIZE / 2),
-            (WINDOW_HEIGHT / 2) - (BALL_SIZE / 2),
-            BALL_SIZE,
-            BALL_SIZE,
-        )
-        ball_velocity_x = -0.25
-        ball_velocity_y = random.randrange(-5, 6) / 10
+        ball.reset(SCREEN_CENTER)
 
     if ball.right >= WINDOW_WIDTH:
         player_1_points += 1
-        ball = pygame.Rect(
-            (WINDOW_WIDTH / 2) - (BALL_SIZE / 2),
-            (WINDOW_HEIGHT / 2) - (BALL_SIZE / 2),
-            BALL_SIZE,
-            BALL_SIZE,
-        )
-        ball_velocity_x = 0.25
-        ball_velocity_y = random.randrange(-5, 6) / 10
+        ball.reset(SCREEN_CENTER)
 
     if left_pad.top <= 0:
         left_pad.top = 0
@@ -131,9 +132,9 @@ while True:
     if right_pad.bottom >= WINDOW_HEIGHT:
         right_pad.bottom = WINDOW_HEIGHT
 
-    pygame.draw.rect(screen, WHITE, ball)
+    ball.draw(screen, WHITE)
 
     for pad in pads:
-        pygame.draw.rect(screen, WHITE, pad)
+        draw.rect(screen, WHITE, pad)
 
-    pygame.display.flip()
+    display.flip()
