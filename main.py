@@ -12,56 +12,38 @@ from pygame import (
     K_s,
     K_UP,
     K_DOWN,
-    draw,
-    Rect,
     time as time
 )
 import random
 from Ball import Ball
+from Player import Player
 
 BACKGROUND = (40, 45, 52)
 WHITE = (255, 255, 255)
+
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
-SCREEN_CENTER = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+WINDOW_SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
+
+SCREEN_X_CENTER = WINDOW_WIDTH / 2
+SCREEN_Y_CENTER = WINDOW_HEIGHT / 2
+SCREEN_CENTER = (SCREEN_X_CENTER, SCREEN_Y_CENTER)
 
 init()
 random.seed(seed_time())
 
-screen = display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+screen = display.set_mode(WINDOW_SIZE)
 small_font = font.Font('assets/fonts/font.ttf', 24)
 score_font = font.Font('assets/fonts/font.ttf', 96)
 
 display.set_caption("pygame-pong")
 
-PAD_VELOCITY = 0.5
-
 clock = time.Clock()
 
-player_1_points = 0
-player_2_points = 0
+ball = Ball(WINDOW_SIZE)
 
-PADS_WIDTH = 20
-PADS_HEIGHT = 90
-BALL_SIZE = 20
-
-ball = Ball(BALL_SIZE, SCREEN_CENTER)
-
-left_pad = Rect(
-    10,
-    (WINDOW_HEIGHT / 2) - (PADS_HEIGHT / 2),
-    PADS_WIDTH,
-    PADS_HEIGHT
-)
-
-right_pad = Rect(
-    WINDOW_WIDTH - PADS_WIDTH - 10,
-    (WINDOW_HEIGHT / 2) - (PADS_HEIGHT / 2),
-    PADS_WIDTH,
-    PADS_HEIGHT,
-)
-
-pads = [left_pad, right_pad]
+player_1 = Player('left', WINDOW_SIZE)
+player_2 = Player('right', WINDOW_SIZE)
 
 while True:
     dt = clock.tick(30)
@@ -77,13 +59,13 @@ while True:
 
     pressed = key.get_pressed()
     if pressed[K_w]:
-        left_pad.move_ip(0, -PAD_VELOCITY * dt)
+        player_1.move(dt, 'up')
     if pressed[K_s]:
-        left_pad.move_ip(0, PAD_VELOCITY * dt)
+        player_1.move(dt, 'down')
     if pressed[K_UP]:
-        right_pad.move_ip(0, -PAD_VELOCITY * dt)
+        player_2.move(dt, 'up')
     if pressed[K_DOWN]:
-        right_pad.move_ip(0, PAD_VELOCITY * dt)
+        player_2.move(dt, 'down')
 
     screen.fill(BACKGROUND)
 
@@ -91,11 +73,11 @@ while True:
     text_rect = text.get_rect(center=(WINDOW_WIDTH / 2, 24))
     screen.blit(text, text_rect)
 
-    player_1_score = score_font.render(str(player_1_points), True, WHITE)
+    player_1_score = score_font.render(str(player_1.score), True, WHITE)
     player_1_score_rect = player_1_score.get_rect(center=(350, 96))
     screen.blit(player_1_score, player_1_score_rect)
 
-    player_2_score = score_font.render(str(player_2_points), True, WHITE)
+    player_2_score = score_font.render(str(player_2.score), True, WHITE)
     player_2_score_rect = player_2_score.get_rect(
         center=(WINDOW_WIDTH - 350, 96)
     )
@@ -103,38 +85,23 @@ while True:
 
     ball.move(dt)
 
-    if ball.colliderect(left_pad):
-        ball.bounce_right(left_pad)
+    if ball.colliderect(player_1.pad):
+        ball.bounce_right(player_1.pad)
 
-    if ball.colliderect(right_pad):
-        ball.bounce_left(right_pad)
-
-    if ball.top <= 0 or ball.bottom >= WINDOW_HEIGHT:
-        ball.bounce_wall()
+    if ball.colliderect(player_2.pad):
+        ball.bounce_left(player_2.pad)
 
     if ball.left <= 0:
-        player_2_points += 1
-        ball.reset(SCREEN_CENTER)
+        player_2.score += 1
+        ball.reset()
 
     if ball.right >= WINDOW_WIDTH:
-        player_1_points += 1
-        ball.reset(SCREEN_CENTER)
-
-    if left_pad.top <= 0:
-        left_pad.top = 0
-
-    if left_pad.bottom >= WINDOW_HEIGHT:
-        left_pad.bottom = WINDOW_HEIGHT
-
-    if right_pad.top <= 0:
-        right_pad.top = 0
-
-    if right_pad.bottom >= WINDOW_HEIGHT:
-        right_pad.bottom = WINDOW_HEIGHT
+        player_1.score += 1
+        ball.reset()
 
     ball.draw(screen, WHITE)
 
-    for pad in pads:
-        draw.rect(screen, WHITE, pad)
+    for player in [player_1, player_2]:
+        player.draw_pad(screen, WHITE)
 
     display.flip()
