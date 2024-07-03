@@ -3,13 +3,17 @@ import random
 
 random.seed(time())
 
+# Players
+PLAYER_1 = 'left'
+PLAYER_2 = 'right'
+
 # Colors
 BACKGROUND = (40, 45, 52)
 WHITE = (255, 255, 255)
 
 # Window settings
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
+WINDOW_WIDTH = 960
+WINDOW_HEIGHT = 540
 WINDOW_SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
 
 # Screen settings

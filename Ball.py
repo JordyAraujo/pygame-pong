@@ -1,12 +1,16 @@
-from pygame import Rect, draw
+from pygame import Rect
+from pygame.draw import rect
 from config import settings
 
 
 class Ball(Rect):
     def __init__(self):
-        super().__init__(0, 0, settings.BALL_SIZE, settings.BALL_SIZE)
-
-        self.center = (settings.SCREEN_X_CENTER, settings.SCREEN_Y_CENTER)
+        super().__init__(
+            settings.SCREEN_X_CENTER,
+            settings.SCREEN_Y_CENTER,
+            settings.BALL_SIZE,
+            settings.BALL_SIZE
+        )
 
         self.velocity_x = settings.BALL_INITIAL_VELOCITY_X
         self.velocity_y = settings.BALL_RANDOM_VELOCITY_Y
@@ -38,4 +42,4 @@ class Ball(Rect):
         )
 
     def draw(self, surface, color):
-        draw.rect(surface, color, self)
+        rect(surface, color, self)

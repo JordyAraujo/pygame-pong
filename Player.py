@@ -1,4 +1,5 @@
-from pygame import Rect, draw
+from pygame import Rect
+from pygame.draw import rect
 from config import settings
 
 
@@ -6,7 +7,7 @@ class Player:
     def __init__(self, pad_position):
         self.score = 0
 
-        if pad_position == 'left':
+        if pad_position == settings.PLAYER_1:
             self.pad = Rect(
                 settings.PAD_GAP,
                 (settings.WINDOW_HEIGHT / 2) - (settings.PAD_HEIGHT / 2),
@@ -35,4 +36,4 @@ class Player:
         self.score += points
 
     def draw_pad(self, surface, color):
-        draw.rect(surface, color, self.pad)
+        rect(surface, color, self.pad)

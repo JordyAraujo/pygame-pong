@@ -1,41 +1,43 @@
 from pygame import (
     init,
-    display,
-    font,
-    event,
-    key,
     QUIT,
     K_ESCAPE,
     KEYDOWN,
     K_w,
     K_s,
     K_UP,
-    K_DOWN,
-    time
+    K_DOWN
 )
+from pygame.display import set_caption, set_mode, update
+from pygame.event import poll
+from pygame.font import Font
+from pygame.key import get_pressed
+from pygame.time import Clock
+
 from Ball import Ball
 from Player import Player
+
 from config import settings
 
 init()
 
-screen = display.set_mode(settings.WINDOW_SIZE)
-small_font = font.Font('assets/fonts/font.ttf', 24)
-score_font = font.Font('assets/fonts/font.ttf', 96)
+screen = set_mode(settings.WINDOW_SIZE)
+small_font = Font('assets/fonts/font.ttf', 24)
+score_font = Font('assets/fonts/font.ttf', 96)
 
-display.set_caption("pygame-pong")
+set_caption("pygame-pong")
 
-clock = time.Clock()
+clock = Clock()
 
 ball = Ball()
 
-player_1 = Player('left')
-player_2 = Player('right')
+player_1 = Player(settings.PLAYER_1)
+player_2 = Player(settings.PLAYER_2)
 
 while True:
     dt = clock.tick(30)
 
-    game_event = event.poll()
+    game_event = poll()
 
     if (
         game_event.type == QUIT
@@ -44,7 +46,7 @@ while True:
     ):
         break
 
-    pressed = key.get_pressed()
+    pressed = get_pressed()
     if pressed[K_w]:
         player_1.move_pad(dt, 'up')
     if pressed[K_s]:
@@ -99,4 +101,4 @@ while True:
     for player in [player_1, player_2]:
         player.draw_pad(screen, settings.WHITE)
 
-    display.flip()
+    update()
