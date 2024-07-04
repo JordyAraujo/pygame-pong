@@ -43,10 +43,12 @@ Aqui temos a estrutura lógica mais básica, chamados de estruturas de controle.
 ```bash
 >>> if idade > 65:
 ...     print(nome + " é idoso.")
+... elif idade > 18:
+...     print(nome + " é adulto.")
 ... else:
-...     print(nome + " não é idoso.")
-...
-João não é idoso.
+...     print(nome + " é criança.")
+... 
+João é adulto.
 ```
 
 ### For - While
