@@ -88,9 +88,11 @@ while True:
         ball.bounce_left(player_2.pad)
 
     if ball.left <= 0:
+        player_2.add_points(1)
         ball.reset()
 
     if ball.right >= settings.WINDOW_WIDTH:
+        player_1.add_points(1)
         ball.reset()
 
     for player in [player_1, player_2]:

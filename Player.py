@@ -32,5 +32,8 @@ class Player:
             if self.pad.bottom >= settings.WINDOW_HEIGHT - settings.PAD_GAP:
                 self.pad.bottom = settings.WINDOW_HEIGHT - settings.PAD_GAP
 
+    def add_points(self, points):
+        self.score += points
+
     def draw_pad(self, surface, color):
         rect(surface, color, self.pad)
