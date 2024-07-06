@@ -136,14 +136,14 @@ while True:
         if ball.left <= 0:
             player_2.add_points(1)
             if player_2.score == settings.WINNING_SCORE:
-                game_state = 'done'
+                game_state = 'finish'
             ball.reset()
             game_state = 'serve'
 
         if ball.right >= settings.WINDOW_WIDTH:
             player_1.add_points(1)
             if player_1.score == settings.WINNING_SCORE:
-                game_state = 'done'
+                game_state = 'finish'
             ball.reset()
             game_state = 'serve'
     elif game_state == 'finish':
