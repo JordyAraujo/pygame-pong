@@ -21,6 +21,14 @@ class Ball(Rect):
         if self.top <= 0 or self.bottom >= settings.WINDOW_HEIGHT:
             self.bounce_wall()
 
+    def bounce_right(self, left_pad):
+        self.velocity_x *= -1
+        self.left = left_pad.right
+
+    def bounce_left(self, right_pad):
+        self.velocity_x *= -1
+        self.right = right_pad.left
+
     def bounce_wall(self):
         self.velocity_y *= -1
 

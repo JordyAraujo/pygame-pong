@@ -81,6 +81,12 @@ while True:
 
     ball.move(dt)
 
+    if ball.colliderect(player_1.pad):
+        ball.bounce_right(player_1.pad)
+
+    if ball.colliderect(player_2.pad):
+        ball.bounce_left(player_2.pad)
+
     for player in [player_1, player_2]:
         player.draw_pad(screen, settings.WHITE)
 
