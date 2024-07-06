@@ -79,6 +79,8 @@ while True:
     if pressed[K_DOWN]:
         player_2.move_pad(dt, 'down')
 
+    ball.move(dt)
+
     for player in [player_1, player_2]:
         player.draw_pad(screen, settings.WHITE)
 

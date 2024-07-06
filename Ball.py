@@ -12,5 +12,11 @@ class Ball(Rect):
             settings.BALL_SIZE
         )
 
+        self.velocity_x = settings.BALL_INITIAL_VELOCITY_X
+        self.velocity_y = settings.BALL_RANDOM_VELOCITY_Y
+
+    def move(self, dt):
+        self.move_ip(self.velocity_x * dt, self.velocity_y * dt)
+
     def draw(self, surface, color):
         rect(surface, color, self)
