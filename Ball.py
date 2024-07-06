@@ -18,5 +18,11 @@ class Ball(Rect):
     def move(self, dt):
         self.move_ip(self.velocity_x * dt, self.velocity_y * dt)
 
+        if self.top <= 0 or self.bottom >= settings.WINDOW_HEIGHT:
+            self.bounce_wall()
+
+    def bounce_wall(self):
+        self.velocity_y *= -1
+
     def draw(self, surface, color):
         rect(surface, color, self)
