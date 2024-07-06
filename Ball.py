@@ -41,5 +41,9 @@ class Ball(Rect):
             settings.SCREEN_Y_CENTER
         )
 
+    def serve(self):
+        self.velocity_x = settings.BALL_INITIAL_VELOCITY_X
+        self.velocity_y = settings.BALL_RANDOM_VELOCITY_Y
+
     def draw(self, surface, color):
         rect(surface, color, self)

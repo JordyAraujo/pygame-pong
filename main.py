@@ -6,7 +6,10 @@ from pygame import (
     K_w,
     K_s,
     K_UP,
-    K_DOWN
+    K_DOWN,
+    K_KP_ENTER,
+    K_RETURN,
+    K_SPACE
 )
 from pygame.display import set_caption, set_mode, update
 from pygame.event import poll
@@ -33,6 +36,13 @@ player_1 = Player(settings.PLAYER_1)
 player_2 = Player(settings.PLAYER_2)
 
 ball = Ball()
+
+# The state of our game; can be any of the following:
+# 1. 'start' (the beginning of the game, before first serve)
+# 2. 'serve' (waiting on a key press to serve the ball)
+# 3. 'play' (the ball is in play, bouncing between paddles)
+# 4. 'finish' (the game is over, with a victor, ready for restart)
+game_state = 'start'
 
 while True:
     dt = clock.tick(30)
@@ -69,31 +79,84 @@ while True:
     )
     screen.blit(player_2_score, player_2_score_rect)
 
-    pressed = get_pressed()
-    if pressed[K_w]:
-        player_1.move_pad(dt, 'up')
-    if pressed[K_s]:
-        player_1.move_pad(dt, 'down')
-    if pressed[K_UP]:
-        player_2.move_pad(dt, 'up')
-    if pressed[K_DOWN]:
-        player_2.move_pad(dt, 'down')
+    if game_state == 'start':
+        text = small_font.render(
+            "Press SPACE or ENTER to start",
+            True,
+            settings.WHITE
+        )
+        text_rect = text.get_rect(center=(settings.WINDOW_WIDTH / 2, 200))
+        screen.blit(text, text_rect)
+        if (
+            game_event.type == KEYDOWN and
+            (
+                game_event.key == K_SPACE or
+                game_event.key == K_KP_ENTER or
+                game_event.key == K_RETURN
+            )
+        ):
+            game_state = 'serve'
+    elif game_state == 'serve':
+        text = small_font.render(
+            "Press SPACE or ENTER to serve",
+            True,
+            settings.WHITE
+        )
+        text_rect = text.get_rect(center=(settings.WINDOW_WIDTH / 2, 200))
+        screen.blit(text, text_rect)
+        if (
+            game_event.type == KEYDOWN and
+            (
+                game_event.key == K_SPACE or
+                game_event.key == K_KP_ENTER or
+                game_event.key == K_RETURN
+            )
+        ):
+            ball.serve()
+            game_state = 'play'
+    elif game_state == 'play':
+        pressed = get_pressed()
+        if pressed[K_w]:
+            player_1.move_pad(dt, 'up')
+        if pressed[K_s]:
+            player_1.move_pad(dt, 'down')
+        if pressed[K_UP]:
+            player_2.move_pad(dt, 'up')
+        if pressed[K_DOWN]:
+            player_2.move_pad(dt, 'down')
 
-    ball.move(dt)
+        ball.move(dt)
 
-    if ball.colliderect(player_1.pad):
-        ball.bounce_right(player_1.pad)
+        if ball.colliderect(player_1.pad):
+            ball.bounce_right(player_1.pad)
 
-    if ball.colliderect(player_2.pad):
-        ball.bounce_left(player_2.pad)
+        if ball.colliderect(player_2.pad):
+            ball.bounce_left(player_2.pad)
 
-    if ball.left <= 0:
-        player_2.add_points(1)
-        ball.reset()
+        if ball.left <= 0:
+            player_2.add_points(1)
+            ball.reset()
 
-    if ball.right >= settings.WINDOW_WIDTH:
-        player_1.add_points(1)
-        ball.reset()
+        if ball.right >= settings.WINDOW_WIDTH:
+            player_1.add_points(1)
+            ball.reset()
+    elif game_state == 'finish':
+        text = small_font.render(
+            "Game Over! Press SPACE or ENTER to restart",
+            True,
+            settings.WHITE
+        )
+        text_rect = text.get_rect(center=(settings.WINDOW_WIDTH / 2, 200))
+        screen.blit(text, text_rect)
+        if (
+            game_event.type == KEYDOWN and
+            (
+                game_event.key == K_SPACE or
+                game_event.key == K_KP_ENTER or
+                game_event.key == K_RETURN
+            )
+        ):
+            game_state = 'start'
 
     for player in [player_1, player_2]:
         player.draw_pad(screen, settings.WHITE)
