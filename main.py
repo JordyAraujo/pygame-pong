@@ -87,6 +87,12 @@ while True:
     if ball.colliderect(player_2.pad):
         ball.bounce_left(player_2.pad)
 
+    if ball.left <= 0:
+        ball.reset()
+
+    if ball.right >= settings.WINDOW_WIDTH:
+        ball.reset()
+
     for player in [player_1, player_2]:
         player.draw_pad(screen, settings.WHITE)
 

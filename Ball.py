@@ -32,5 +32,14 @@ class Ball(Rect):
     def bounce_wall(self):
         self.velocity_y *= -1
 
+    def reset(self):
+        self.velocity_x = 0
+        self.velocity_y = 0
+
+        self.center = self.center = (
+            settings.SCREEN_X_CENTER,
+            settings.SCREEN_Y_CENTER
+        )
+
     def draw(self, surface, color):
         rect(surface, color, self)
