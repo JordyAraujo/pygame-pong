@@ -1,7 +1,17 @@
-from pygame import init, QUIT, KEYDOWN, K_ESCAPE
+from pygame import (
+    init,
+    QUIT,
+    K_ESCAPE,
+    KEYDOWN,
+    K_w,
+    K_s,
+    K_UP,
+    K_DOWN
+)
 from pygame.display import set_caption, set_mode, update
 from pygame.event import poll
 from pygame.font import Font
+from pygame.key import get_pressed
 from pygame.time import Clock
 
 from Player import Player
@@ -58,6 +68,16 @@ while True:
         center=(settings.WINDOW_WIDTH - 350, 96)
     )
     screen.blit(player_2_score, player_2_score_rect)
+
+    pressed = get_pressed()
+    if pressed[K_w]:
+        player_1.move_pad(dt, 'up')
+    if pressed[K_s]:
+        player_1.move_pad(dt, 'down')
+    if pressed[K_UP]:
+        player_2.move_pad(dt, 'up')
+    if pressed[K_DOWN]:
+        player_2.move_pad(dt, 'down')
 
     for player in [player_1, player_2]:
         player.draw_pad(screen, settings.WHITE)

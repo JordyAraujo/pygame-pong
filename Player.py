@@ -22,5 +22,15 @@ class Player:
                 settings.PAD_HEIGHT,
             )
 
+    def move_pad(self, dt, direction):
+        if direction == 'up':
+            self.pad.y -= settings.INITIAL_PAD_VELOCITY * dt
+            if self.pad.top <= settings.PAD_GAP:
+                self.pad.top = settings.PAD_GAP
+        else:
+            self.pad.y += settings.INITIAL_PAD_VELOCITY * dt
+            if self.pad.bottom >= settings.WINDOW_HEIGHT - settings.PAD_GAP:
+                self.pad.bottom = settings.WINDOW_HEIGHT - settings.PAD_GAP
+
     def draw_pad(self, surface, color):
         rect(surface, color, self.pad)
