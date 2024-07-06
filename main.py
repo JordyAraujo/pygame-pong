@@ -5,6 +5,7 @@ from pygame.font import Font
 from pygame.time import Clock
 
 from Player import Player
+from Ball import Ball
 
 from config import settings
 
@@ -20,6 +21,8 @@ clock = Clock()
 
 player_1 = Player(settings.PLAYER_1)
 player_2 = Player(settings.PLAYER_2)
+
+ball = Ball()
 
 while True:
     dt = clock.tick(30)
@@ -58,5 +61,7 @@ while True:
 
     for player in [player_1, player_2]:
         player.draw_pad(screen, settings.WHITE)
+
+    ball.draw(screen, settings.WHITE)
 
     update()
